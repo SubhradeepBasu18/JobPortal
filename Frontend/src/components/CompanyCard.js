@@ -1,42 +1,43 @@
 import React, { useEffect } from "react";
 import AOS from "aos";
-import 'aos/dist/aos.css';
-
+import "aos/dist/aos.css";
 
 const CompanyCard = ({ company, location, salary, isDarkMode }) => {
+    useEffect(() => {
+        AOS.init({ duration: 1000,
+            easing: 'ease-in-out',
+            once: true });
+    }, []);
 
-    useEffect(()=>{
-        AOS.init({duration: 1000, once: true});
-    },[])
+    useEffect(() => {
+        AOS.refresh();
+    }, [isDarkMode]);
 
-    return(
+    return (
         <div
-    className={`${
-        isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-900'
-    } 
-    border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg p-6 max-w-sm w-full
-    transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl`}
-    data-aos="fade-up">
+            className={`border rounded-md shadow-md p-4 
+                ${isDarkMode ? 
+                    'bg-gray-800 text-gray-200 border-gray-700 hover:bg-gradient-to-r hover:from-gray-800 hover:via-gray-700 hover:to-gray-900 hover:border-blue-400 hover:shadow-blue-900/50' : 
+                    'bg-white text-gray-900 border-gray-300 hover:bg-gradient-to-r hover:from-white hover:via-blue-50 hover:to-blue-100 hover:border-blue-500 hover:shadow-blue-200/70'} 
+                transition-all duration-300 ease-in-out transform hover:scale-115 hover:shadow-2xl`}
+            data-aos="fade-up"
+        >
 
-    <h2 className="text-3xl font-bold text-blue-600 mb-4 text-center">{company}</h2>
-    
-    <div className="flex justify-between items-center mb-4">
-        <div>
-            <p className={`text-lg font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>Location:</p>
-            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{location}</p>
+
+            <h2 className="text-2xl font-bold text-blue-600 text-center mb-4">{company}</h2>
+
+            <div className="space-y-2">
+                <div>
+                    <p className="text-lg font-medium">Location:</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-400">{location}</p>
+                </div>
+                <div>
+                    <p className="text-lg font-medium">Salary:</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-400">${salary}</p>
+                </div>
+            </div>
         </div>
-        
-        <div>
-            <p className={`text-lg font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>Salary:</p>
-            <p className={`text-sm font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>${salary}</p>
-        </div>
-    </div>
+    );
+};
 
-</div>
-
-
-
-
-    )
-}
 export default CompanyCard;

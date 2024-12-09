@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react'; // Import eye icons
 import { login } from '../ConfigAPI.js'; 
 
 const SignIn = ({ isDarkMode, onLogin }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [userType, setUserType] = useState('user'); // Toggle between 'user' and 'employer'
+    const [userType, setUserType] = useState('user');
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
     const [name, setName] = useState('');
+    const [showPassword, setShowPassword] = useState(false); // New state for password visibility
 
     const navigate = useNavigate();
 
@@ -22,7 +24,7 @@ const SignIn = ({ isDarkMode, onLogin }) => {
 
         setErrorMessage('');
         try {
-            const response = await login({ email, password},userType);
+            const response = await login({ email, password}, userType);
 
             if (response.status === 200) {
                 const { name, email } = response.data.data.user;
@@ -46,10 +48,14 @@ const SignIn = ({ isDarkMode, onLogin }) => {
     const handleContinue = () => {
         setShowSuccessDialog(false);
         if (userType === 'employer') {
-            navigate('/job-posting-page'); // Redirect employers to the Job Posting Page
+            navigate('/job-posting-page');
         } else {
-            navigate('/'); // Redirect users to the home page
+            navigate('/');
         }
+    };
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
     };
 
     return (
@@ -91,17 +97,29 @@ const SignIn = ({ isDarkMode, onLogin }) => {
 
                     <div className="flex justify-center space-x-4 mt-4">
                         <button
-                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                                userType === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                             className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                                userType === "user"
+                                    ? isDarkMode
+                                        ? "bg-blue-600 text-white"
+                                        : "bg-blue-500 text-white"
+                                    : isDarkMode
+                                    ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                             }`}
                             onClick={() => setUserType('user')}
                         >
                             User
                         </button>
                         <button
-                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                                userType === 'employer' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                            }`}
+                           className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                            userType === "employer"
+                                ? isDarkMode
+                                    ? "bg-green-600 text-white"
+                                    : "bg-green-500 text-white"
+                                : isDarkMode
+                                ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                        }`}
                             onClick={() => setUserType('employer')}
                         >
                             Employer
@@ -124,18 +142,39 @@ const SignIn = ({ isDarkMode, onLogin }) => {
                                     : 'bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500'
                             }`}
                         />
-                        <input
-                            type="password"
-                            required
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className={`appearance-none rounded-md relative block w-full px-3 py-2 border placeholder-opacity-75 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-300 ${
-                                isDarkMode
-                                    ? 'bg-gray-800 border-gray-700 placeholder-gray-400 text-gray-200 focus:ring-blue-400 focus:border-blue-400'
-                                    : 'bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500'
-                            }`}
-                        />
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                required
+                                placeholder="Password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className={`appearance-none rounded-md relative block w-full px-3 py-2 border placeholder-opacity-75 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-300 ${
+                                    isDarkMode
+                                        ? 'bg-gray-800 border-gray-700 placeholder-gray-400 text-gray-200 focus:ring-blue-400 focus:border-blue-400'
+                                        : 'bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500'
+                                }`}
+                            />
+                            <button
+                                type="button"
+                                onClick={togglePasswordVisibility}
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                            >
+                                {showPassword ? (
+                                    <EyeOff 
+                                        className={`h-5 w-5 ${
+                                            isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                                        }`} 
+                                    />
+                                ) : (
+                                    <Eye 
+                                        className={`h-5 w-5 ${
+                                            isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                                        }`} 
+                                    />
+                                )}
+                            </button>
+                        </div>
                         <button
                             type="submit"
                             className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-300 ${

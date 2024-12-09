@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Eye, EyeOff } from 'lucide-react';
 import { signup } from "../ConfigAPI";
 
 const SignUp = ({ isDarkMode }) => {
@@ -17,6 +18,8 @@ const SignUp = ({ isDarkMode }) => {
     const [profilePicPreview, setProfilePicPreview] = useState(null);
     const [passwordError, setPasswordError] = useState("");
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -74,6 +77,14 @@ const SignUp = ({ isDarkMode }) => {
 
     const handleSuccessDialogClose = () => {
         setShowSuccessDialog(false);
+    };
+
+    const togglePasswordVisibility = (type) => {
+        if (type === 'password') {
+            setShowPassword(!showPassword);
+        } else {
+            setShowConfirmPassword(!showConfirmPassword);
+        }
     };
 
     return (
@@ -178,35 +189,77 @@ const SignUp = ({ isDarkMode }) => {
                                 : "bg-white text-gray-900 border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                         }`}
                     />
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
-                        className={`block w-full px-3 py-2 rounded-md border transition-colors ${
-                            isDarkMode
-                                ? "bg-gray-800 text-gray-200 border-gray-700 focus:ring-blue-400 focus:border-blue-400"
-                                : "bg-white text-gray-900 border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                        }`}
-                    />
+                    <div className="relative">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            placeholder="Password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                            className={`block w-full px-3 py-2 rounded-md border transition-colors ${
+                                isDarkMode
+                                    ? "bg-gray-800 text-gray-200 border-gray-700 focus:ring-blue-400 focus:border-blue-400"
+                                    : "bg-white text-gray-900 border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                            }`}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => togglePasswordVisibility('password')}
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                        >
+                            {showPassword ? (
+                                <EyeOff 
+                                    className={`h-5 w-5 ${
+                                        isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                                    }`} 
+                                />
+                            ) : (
+                                <Eye 
+                                    className={`h-5 w-5 ${
+                                        isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                                    }`} 
+                                />
+                            )}
+                        </button>
+                    </div>
                     {passwordError && (
                         <p className="text-red-500 text-xs mt-1">{passwordError}</p>
                     )}
-                    <input
-                        type="password"
-                        name="confirmPassword"
-                        placeholder="Confirm Password"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                        required
-                        className={`block w-full px-3 py-2 rounded-md border transition-colors ${
-                            isDarkMode
-                                ? "bg-gray-800 text-gray-200 border-gray-700 focus:ring-blue-400 focus:border-blue-400"
-                                : "bg-white text-gray-900 border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                        }`}
-                    />
+                    <div className="relative">
+                        <input
+                            type={showConfirmPassword ? "text" : "password"}
+                            name="confirmPassword"
+                            placeholder="Confirm Password"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            required
+                            className={`block w-full px-3 py-2 rounded-md border transition-colors ${
+                                isDarkMode
+                                    ? "bg-gray-800 text-gray-200 border-gray-700 focus:ring-blue-400 focus:border-blue-400"
+                                    : "bg-white text-gray-900 border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                            }`}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => togglePasswordVisibility('confirmPassword')}
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                        >
+                            {showConfirmPassword ? (
+                                <EyeOff 
+                                    className={`h-5 w-5 ${
+                                        isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                                    }`} 
+                                />
+                            ) : (
+                                <Eye 
+                                    className={`h-5 w-5 ${
+                                        isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                                    }`} 
+                                />
+                            )}
+                        </button>
+                    </div>
 
                     {userType === "jobseeker" && (
                         <div>

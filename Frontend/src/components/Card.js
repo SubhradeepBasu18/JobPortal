@@ -1,32 +1,46 @@
-import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import React, { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const Card = ({ title, description, company, location, salary, isDarkMode }) => {
     useEffect(() => {
-        AOS.init({ duration: 1000, once: true });
+        AOS.init({ duration: 1000,
+            easing: 'ease-in-out',
+            once: true});
     }, []);
+
+    useEffect(() => {
+        AOS.refresh();
+    }, [isDarkMode]);
 
     return (
         <div
             className={`border rounded-md shadow-md p-4 
-        ${isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-900'} 
-        transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl`}
+                ${isDarkMode ? 
+                    'bg-gray-800 text-gray-200 border-gray-700 hover:bg-gradient-to-r hover:from-gray-800 hover:via-gray-700 hover:to-gray-900 hover:border-blue-400 hover:shadow-blue-900/50' : 
+                    'bg-white text-gray-900 border-gray-300 hover:bg-gradient-to-r hover:from-white hover:via-blue-50 hover:to-blue-100 hover:border-blue-500 hover:shadow-blue-200/70'} 
+                transition-all duration-300 ease-in-out transform hover:scale-115 hover:shadow-2xl`}
             data-aos="fade-up"
         >
-            <h2 className="text-xl font-semibold text-blue-600">{title}</h2>
+
+            <h2 className="text-2xl font-bold text-blue-600 text-center mb-4">{title}</h2>
+
             <p className="text-gray-700 dark:text-gray-300 mt-2">{description}</p>
-            <p className="text-gray-700 dark:text-gray-300 mt-2">Company: {company}</p>
-            <p className="text-gray-700 dark:text-gray-300 mt-2">Location: {location}</p>
-            <p className="text-gray-700 dark:text-gray-300 mt-2">Salary: ${salary}</p>
-            {/* <p className="text-gray-700 dark:text-gray-300 mt-2">Posted By: {postedBy}</p> */}
-            {/* <Link
-        to={link}
-        className="text-blue-500 hover:text-blue-600 mt-4 inline-block transition-colors duration-200"
-      >
-        {link.includes('job') ? 'View Job Details' : 'View Company Details'}
-      </Link> */}
+
+            <div className="space-y-2">
+                <div>
+                    <p className="text-lg font-medium">Company:</p>
+                    <p className="text-sm text-gray-800 dark:text-gray-400">{company}</p>
+                </div>
+                <div>
+                    <p className="text-lg font-medium">Location:</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-400">{location}</p>
+                </div>
+                <div>
+                    <p className="text-lg font-medium">Salary:</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-400">${salary}</p>
+                </div>
+            </div>
         </div>
     );
 };
